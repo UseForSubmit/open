@@ -97,7 +97,16 @@ public class ShortestPathLRU {
         ArrayList<Integer> pick = new ArrayList<>(Collections.nCopies(N,0));
         ArrayList<Integer> drop = new ArrayList<>(Collections.nCopies(N,0));
 
-        try {
+        in = new InputStreamReader(new FileInputStream(raw_request));
+        ArrayList<int[]> requests = gson.fromJson(in,
+                new TypeToken<ArrayList<int[]>>() {
+                }.getType());
+        in.close();
+        for (int[] req: requests) {
+            pick.set(req[1], pick.get(req[1]) + 1);
+            drop.set(req[3], drop.get(req[3]) + 1);
+        }
+        /*try {
             File file = new File(raw_request);
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
@@ -113,7 +122,7 @@ public class ShortestPathLRU {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         ArrayList<Integer> pick_array = (ArrayList<Integer>) pick.clone();
         ArrayList<Integer> drop_array = (ArrayList<Integer>) drop.clone();
 

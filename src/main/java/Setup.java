@@ -14,7 +14,6 @@ public class Setup {
         Gson gson = new Gson();
 
         String data_type = "./NYC/ny";
-        String raw_request = "./NYC/ny_output_price_12";
         final double [] range_ = {40.51d, 40.91d, -74.26d, -73.7d};
         final double [] speed = {0d, 3.3528d, 4.4704, 5.588d, 6.7056d, 7.8232d, 8.9408d, 1d}; //1m/s for speed of human
         String filename = "./new-york-latest_edges.txt.csv";

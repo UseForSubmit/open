@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-final public class Request{
+final class Request{
     int ls, le, tr, tp, td, p, a, dist;
     void init(int ls, int le, int tr, int a, int dist){
         this.ls=ls;
@@ -40,32 +40,4 @@ final public class Request{
         }
     }
 */
-    public static void main(String[] args) throws IOException {
-        Gson gson = new Gson();
-        InputStreamReader in = new InputStreamReader(new FileInputStream("./NYC/nyTask" + args[0] + ".json"));
-        ArrayList<int[]> request_list = gson.fromJson(in,
-                new TypeToken<ArrayList<int[]>>() {
-                }.getType());
-        in.close();
-        ShortestPathLRU SPC = new ShortestPathLRU();
-        SPC.init("./NYC/ny");
-        ArrayList<Request> Requests = new ArrayList<>();
-        for (int[] request_info : request_list) {
-            if (request_info[1] == request_info[2]) {
-                continue;
-            }
-            int dist = SPC.dis(request_info[1], request_info[2]);
-            if (dist == -1) {
-                continue;
-            }
-            Request request = new Request();
-            request.init(request_info[1], request_info[2], request_info[0],
-                    request_info[3], dist);
-            Requests.add(request);
-        }
-        String jsonObject = gson.toJson(Requests);
-        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream("./NYC/nyReq" + args[0] + ".json"));
-        out.write(jsonObject, 0, jsonObject.length());
-        out.close();
-    }
 }

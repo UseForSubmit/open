@@ -91,7 +91,7 @@ public class ShortestPathHSG {
         in.close();
     }
 
-    void intializeFrequent() throws IOException {
+    void intializeFrequent(String raw_request) throws IOException {
         Gson gson = new Gson();
         InputStreamReader in = new InputStreamReader(new FileInputStream("./NYC/ny_graph_o_j.json"));
         this.graph = gson.fromJson(in,
@@ -139,27 +139,16 @@ public class ShortestPathHSG {
         ArrayList<Integer> pick = new ArrayList<>(Collections.nCopies(N,0));
         ArrayList<Integer> drop = new ArrayList<>(Collections.nCopies(N,0));
 
-        try {
-            File file = new File("./NYC/ny_output_price_12");
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            String str;
-
-            while ((str = br.readLine())!=null) {
-                if(Builder.core[Integer.parseInt(str.split(" ")[1])] || Builder.sub[Integer.parseInt(str.split(" ")[1])]) {
-                    pick.set(Integer.parseInt(str.split(" ")[1]), pick.get(Integer.parseInt(str.split(" ")[1])) + 1);
-                }
-                if(Builder.core[Integer.parseInt(str.split(" ")[3])] || Builder.sub[Integer.parseInt(str.split(" ")[3])]) {
-                    drop.set(Integer.parseInt(str.split(" ")[3]), drop.get(Integer.parseInt(str.split(" ")[3])) + 1);
-                }
-            }
-
-            br.close();
-            fr.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        in = new InputStreamReader(new FileInputStream(raw_request));
+        ArrayList<int[]> requests = gson.fromJson(in,
+                new TypeToken<ArrayList<int[]>>() {
+                }.getType());
+        in.close();
+        for (int[] req: requests) {
+            pick.set(req[1], pick.get(req[1]) + 1);
+            drop.set(req[3], drop.get(req[3]) + 1);
         }
+
         ArrayList<Integer> pick_array = (ArrayList<Integer>) pick.clone();
         ArrayList<Integer> drop_array = (ArrayList<Integer>) drop.clone();
 
@@ -313,6 +302,6 @@ public class ShortestPathHSG {
     public static void main(String[] args) throws IOException {
         ShortestPathHSG LRU = new ShortestPathHSG();
         LRU.file = "./NYC/default/";
-        LRU.intializeFrequent();
+        LRU.intializeFrequent("./NYC/ny_output_price_12");
     }
 }

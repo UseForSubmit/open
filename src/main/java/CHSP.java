@@ -1,7 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.*;
 import java.util.*;
 
 public class CHSP {
@@ -87,7 +83,6 @@ public class CHSP {
         }
     }
 
-
     //priorityQueue (based on min heap) dealing with importance parameter.
     public static class PQIMPcomparator implements Comparator<Vertex>{
         public int compare(Vertex node1, Vertex node2){
@@ -101,7 +96,6 @@ public class CHSP {
         }
     }
 
-
     //priorityQueue (min heap) dealing with distance while preprocessing time.
     static class PriorityQueueComp implements Comparator<Vertex>{
         public int compare(Vertex node1,Vertex node2){
@@ -114,8 +108,6 @@ public class CHSP {
             return 0;
         }
     }
-
-
 
     //all functions dealing with preprocessing in this class.
     static class PreProcess{
@@ -311,9 +303,6 @@ public class CHSP {
         }
     }
 
-
-
-
     //priorityQueue(min heap) for bidirectional dijkstra algorithms.(for forward search)
     public static class forwComparator implements Comparator<Vertex>{
         public int compare(Vertex vertex1, Vertex vertex2){
@@ -327,8 +316,6 @@ public class CHSP {
         }
     }
 
-
-
     //priorityQueue(min heap) for bidirectional dijkstra algorithms.(for backward search)
     public static class revComparator implements Comparator<Vertex>{
         public int compare(Vertex vertex1, Vertex vertex2){
@@ -341,8 +328,6 @@ public class CHSP {
             return 0;
         }
     }
-
-
 
     //class for bidirectional dijstra search.
     static class BidirectionalDijkstra{
@@ -402,8 +387,6 @@ public class CHSP {
             return estimate;
         }
 
-
-
         //function to relax edges.(according to the direction forward or backward)
         private void relaxEdges(Vertex [] graph, int vertex,String str, long queryId){
             if(str == "f"){
@@ -449,15 +432,5 @@ public class CHSP {
             }
         }
 
-        public void resize_graph(int size){
-            this.graph = new Vertex[size];
-        }
-
-        public void add_edge(int x, int y, int weight){
-            this.graph[x].outEdges.add(y);
-            this.graph[x].outECost.add(weight);
-            this.graph[y].inEdges.add(x);
-            this.graph[y].inECost.add(weight);
-        }
     }
 }

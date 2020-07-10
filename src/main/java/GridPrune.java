@@ -9,13 +9,13 @@ import java.util.HashMap;
 public class GridPrune{
     int [] node2region;
     HashMap <Integer, HashMap<Integer,Long>> time_list;
-    public void init() throws IOException {
+    public void init(String data_set) throws IOException {
         Gson gson = new Gson();
-        InputStreamReader in = new InputStreamReader(new FileInputStream("./NYC/ny_node2region_j.json"));
+        InputStreamReader in = new InputStreamReader(new FileInputStream(data_set+"_node2region_j.json"));
         this.node2region  = gson.fromJson(in,
                 new TypeToken<int[]>(){ }.getType());
         in.close();
-        in = new InputStreamReader(new FileInputStream("./NYC/ny_inter_region_cost_j.json"));
+        in = new InputStreamReader(new FileInputStream(data_set+"_inter_region_cost_j.json"));
         this.time_list = gson.fromJson(in,
                 new TypeToken<HashMap<Integer, HashMap<Integer,Long>>>(){ }.getType());
         in.close();

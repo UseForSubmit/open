@@ -34,8 +34,8 @@ public class GreedyDP {
         InputStreamReader in;
 
         GridPrune Grid = new GridPrune();
-        Grid.init();
         String data_file = "./NYC/ny";
+        Grid.init(data_file);
 
         ShortestPathLRU SPC = new ShortestPathLRU();
         SPC.init(data_file);

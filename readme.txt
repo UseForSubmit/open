@@ -1,25 +1,23 @@
 Many big raw files cannot be uploaded. After processing, the files for default parameters are uploaded.
 
-1. You need to download the NYC taxi data first:
-wget https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2013-12.csv
+-----------1. You need to download the NYC taxi data first:
+wget -P ./NYC/ https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2013-12.csv
 
-2. Then run maven command for request generation
-Run:    python3 get_request.py
-Run:    mvn compile exec:java -Dexec.mainClass="Request"
+-----------2. Then run maven command for request generation and initial LRU of normal graph 
+Run:    mvn compile exec:java -Dexec.mainClass="get_request"
 
-3. Then setup LRU
+-----------3. Then setup LRU for HMPO graph
 Run:    mvn compile exec:java -Dexec.mainClass="ShortestPathHSG"
-Run:    mvn compile exec:java -Dexec.mainClass="ShortestPathLRU"
 
-4. Finally we have three algorithm
-for Algorithm SMDB:
-mvn compile exec:java -Dexec.mainClass="HSRP" -Dexec.args="#_of_worker detour_factor capacity"
-for Algorithm BasicMP:
-mvn compile exec:java -Dexec.mainClass="RPWM" -Dexec.args="#_of_worker detour_factor capacity"
-for Algorithm GreedyDP:
-mvn compile exec:java -Dexec.mainClass="GreedyDP" -Dexec.args="#_of_worker detour_factor capacity"
+-----------4. Finally we have 3 algorithms
+-----for Algorithm SMDB, run:
+Run:    mvn compile exec:java -Dexec.mainClass="HSRP" -Dexec.args="#_of_worker detour_factor capacity"
+-----for Algorithm BasicMP, run:
+Run:    mvn compile exec:java -Dexec.mainClass="RPWM" -Dexec.args="#_of_worker detour_factor capacity"
+-----for Algorithm GreedyDP, run:
+Run:    mvn compile exec:java -Dexec.mainClass="GreedyDP" -Dexec.args="#_of_worker detour_factor capacity"
 
-For example, 10000 worker with capacity 3, allowing detour 30%:
+-----------For example, 10000 worker with capacity 3, allowing detour 30%:
 mvn compile exec:java -Dexec.mainClass="HSRP" -Dexec.args="10000 1.3 3"
 
 
@@ -32,19 +30,17 @@ Below are the steps to set up with new graphs. Remember to change the data name 
 ----------for basic graph generation-----------------------------
 3.Run:       mvn compile exec:java -Dexec.mainClass="Setup"
 
+----------for NYC request generation and LRU initial-------------
+4.Run:    mvn compile exec:java -Dexec.mainClass="get_request.py"
+
 ----------for grid prune------------------------------------------
-4.Run:       mvn compile exec:java -Dexec.mainClass="grid_dis"
+5.Run:       mvn compile exec:java -Dexec.mainClass="grid_dis"
 
 ----------operations for meeting point based solutions----------
-5.Run:       mvn compile exec:java -Dexec.mainClass="ProcessWM"
-
-----------for NYC request generation----------------------------------
-6.1.Run:    python3 get_request.py
-6.2.Run:    mvn compile exec:java -Dexec.mainClass="Request"
+6.Run:       mvn compile exec:java -Dexec.mainClass="ProcessWM"
 
 ----------generate synthetic data---------------------------------
 7.Run:       mvn compile exec:java -Dexec.mainClass="get_syn"
 
-----------operations for LRU construction----------
-8.1.Run:    mvn compile exec:java -Dexec.mainClass="ShortestPathHSG"
-8.2.Run:    mvn compile exec:java -Dexec.mainClass="ShortestPathLRU"
+----------operations for HMPO LRU construction----------------
+8.Run:     mvn compile exec:java -Dexec.mainClass="ShortestPathHSG"

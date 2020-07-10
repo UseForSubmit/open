@@ -16,6 +16,7 @@ public class gen_syn {
         for (int i = 0; i < 24 * 60; i++) end.add(new HashMap<>());
 
         HashSet<Integer> days = new HashSet<>();
+        ArrayList<Integer> cap = new ArrayList<>();
         while ((line = bf.readLine()) != null) {
             String[] info = line.split(" ");
             int day = Integer.parseInt(info[0]);
@@ -23,6 +24,7 @@ public class gen_syn {
             int time = Integer.parseInt(info[2]);
             int loc = Integer.parseInt(info[1]);
             int locd = Integer.parseInt(info[3]);
+            cap.add(Integer.parseInt(info[4]));
             if (!end.get(time).containsKey(loc)) {
                 HashMap<Integer, Integer> temp = new HashMap<>();
                 temp.put(locd, 1);
@@ -65,16 +67,6 @@ public class gen_syn {
             start_dis.put(time, where);
         }
         System.out.println("collected");
-        HashMap<Integer, Double> cap = new HashMap<>();
-        cap.put(1, 0.6929479086784608);
-        cap.put(2, 0.14336783928100816);
-        cap.put(3, 0.045115859732914716);
-        cap.put(4, 0.023364987683877552);
-        cap.put(5, 0.05622885727541633);
-        cap.put(6, 0.03897347370482448);
-        cap.put(7, 3.57881165988291e-07);
-        cap.put(8, 4.2945739918594917e-07);
-        cap.put(9, 2.863049327906328e-07);
 
         ArrayList<Integer> dis_t = new ArrayList<>();
         for (int time = 0; time < end.size(); time++){
@@ -103,12 +95,12 @@ public class gen_syn {
             int dist = SPC.dis(loc, locd);
             if (dist == -1) continue;
 
-            int cap_n = 1;
-            double cap_p = rad.nextDouble()-cap.get(cap_n);
+            int cap_n = cap.get(rad.nextInt(cap.size()));
+            /*double cap_p = rad.nextDouble()-cap.get(cap_n);
             while (cap_p>0) {
                 cap_n++;
                 cap_p-=cap.get(cap_n);
-            }
+            }*/
             counter++;
             int[] task = {time*60+sub_time, loc, locd, cap_n};
             tasks.get(time*60+sub_time).add(task);

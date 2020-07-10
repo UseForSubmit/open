@@ -1,13 +1,6 @@
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.*;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.util.*;
-import java.util.stream.IntStream;
 
-public class Defected {
+class Defected {
     Comparator<CHSP.Vertex> PQcomp = new CHSP.PriorityQueueComp();
     PriorityQueue<CHSP.Vertex> queue;
 
@@ -49,8 +42,6 @@ public class Defected {
 
             dijkstra(graph,inVertex,max,contractId,i); 	//finds the shortest distances from the inVertex to all the outVertices.
 
-            //System.out.println("after dij we have "+graph[inVertex].distance.distance);
-            //this code adds shortcuts.
             for(int j=0;j<outEdges.size();j++){
                 int outVertex = outEdges.get(j);
                 int outcost = outECost.get(j);

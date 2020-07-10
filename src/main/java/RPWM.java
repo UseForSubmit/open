@@ -38,9 +38,9 @@ public class RPWM {
         InputStreamReader in;
 
         GridPrune Grid = new GridPrune();
-        Grid.init();
-        String data_set = "./NYC/default/";
         String data_file = "./NYC/ny";
+        Grid.init(data_file);
+        String data_set = "./NYC/default/";
 
         ShortestPathLRU SPC = new ShortestPathLRU();
         SPC.init(data_file);

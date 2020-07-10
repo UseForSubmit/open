@@ -40,7 +40,7 @@ public class HSRP {
         InputStreamReader in;
 
         GridPrune Grid = new GridPrune();
-        Grid.init();
+        Grid.init("./NYC/ny");
 
         String data_set = "./NYC/default/";
 

@@ -1,5 +1,4 @@
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import javafx.util.Pair;
 
 import java.io.*;
@@ -325,91 +324,6 @@ public class BuildGraph {
         }
     }
 
-    /*public int HS_dis(int s, int d){
-        if(s==d) return 0;
-        return BD.computeDist(s, d);
-        if(core[s]){
-            if(core[d]){
-                return bd.computeDist(HSgraph, s, d, queryID++);
-
-            }else if(sub[d]){
-                HSgraph[d] = sub_core.get(d);
-                for(int i=0; i<HSgraph[d].inEdges.size();i++){
-                    int idx = HSgraph[d].inEdges.get(i);
-                    HSgraph[idx].outEdges.add(d);
-                    HSgraph[idx].outECost.add(HSgraph[d].inECost.get(i));
-                }
-                int result = bd.computeDist(HSgraph, s, d, queryID++);
-                for(int i=0; i<HSgraph[d].inEdges.size();i++){
-                    int idx = HSgraph[d].inEdges.get(i);
-                    int len = HSgraph[idx].outEdges.size()-1;
-                    HSgraph[idx].outEdges.remove(len);
-                    HSgraph[idx].outECost.remove(len);
-                }
-                HSgraph[d] = null;
-                return result;
-            }
-            else return -1;
-        }else if(sub[s]){
-            if(core[d]){
-                if(sub_core.get(s).outEdges.contains(d)){
-                    return sub_core.get(s).outECost.get(sub_core.get(s).outEdges.indexOf(d));
-                }
-                HSgraph[s] = sub_core.get(s);
-                for(int i=0; i<HSgraph[s].outEdges.size();i++){
-                    int idx = HSgraph[s].outEdges.get(i);
-                    HSgraph[idx].inEdges.add(s);
-                    HSgraph[idx].inECost.add(HSgraph[s].outECost.get(i));
-                }
-                int result = bd.computeDist(HSgraph, s, d, queryID++);
-                for(int i=0; i<HSgraph[s].outEdges.size();i++){
-                    int idx = HSgraph[s].outEdges.get(i);
-                    int len = HSgraph[idx].inEdges.size()-1;
-                    HSgraph[idx].inEdges.remove(len);
-                    HSgraph[idx].inECost.remove(len);
-                }
-                HSgraph[s] = null;
-                return result;
-            }else if(sub[d]) {
-                if (sub_nodes.get(s).outEdges.contains(d)) {
-                    return sub_nodes.get(s).outECost.get(sub_nodes.get(s).outEdges.indexOf(d));
-                }
-                HSgraph[s] = sub_core.get(s);
-                for(int i=0; i<HSgraph[s].outEdges.size();i++){
-                    int idx = HSgraph[s].outEdges.get(i);
-                    HSgraph[idx].inEdges.add(s);
-                    HSgraph[idx].inECost.add(HSgraph[s].outECost.get(i));
-                }
-                HSgraph[d] = sub_core.get(d);
-                for(int i=0; i<HSgraph[d].inEdges.size();i++){
-                    int idx = HSgraph[d].inEdges.get(i);
-                    HSgraph[idx].outEdges.add(d);
-                    HSgraph[idx].outECost.add(HSgraph[d].inECost.get(i));
-                }
-                int result = bd.computeDist(HSgraph, s, d, queryID++);
-                for(int i=0; i<HSgraph[d].inEdges.size();i++){
-                    int idx = HSgraph[d].inEdges.get(i);
-                    int len = HSgraph[idx].outEdges.size()-1;
-                    HSgraph[idx].outEdges.remove(len);
-                    HSgraph[idx].outECost.remove(len);
-                }
-                for(int i=0; i<HSgraph[s].outEdges.size();i++){
-                    int idx = HSgraph[s].outEdges.get(i);
-                    int len = HSgraph[idx].inEdges.size()-1;
-                    HSgraph[idx].inEdges.remove(len);
-                    HSgraph[idx].inECost.remove(len);
-                }
-                HSgraph[s] = null;
-                HSgraph[d] = null;
-                return result;
-            }else {
-                return -1;
-            }
-        }else {
-            return -1;
-        }
-    }*/
-
     public void process(ArrayList<ArrayList<Integer>> Edges, ArrayList<Boolean>defective) throws IOException {
         Gson gson = new Gson();
         CHSP.Vertex[] graph = new CHSP.Vertex[n];
@@ -462,53 +376,12 @@ public class BuildGraph {
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
-        /*for(int i=0;i<n;i++){
-            if(sub[i]) {
-                HSgraph[i] = sub_core.get(i);
-                for(int j=0; j<HSgraph[i].inEdges.size();j++){
-                    int idx = HSgraph[i].inEdges.get(j);
-                    HSgraph[idx].outEdges.add(i);
-                    HSgraph[idx].outECost.add(HSgraph[i].inECost.get(j));
-                }
-                for(int j=0; j<HSgraph[i].outEdges.size();j++){
-                    int idx = HSgraph[i].outEdges.get(j);
-                    HSgraph[idx].inEdges.add(i);
-                    HSgraph[idx].inECost.add(HSgraph[i].outECost.get(j));
-                }
-            }
-        } *///how to prevent SP between core node affected by sub //core contract first
-
         CHSP.PreProcess process = new CHSP.PreProcess();
         process.processing(HSgraph);
 
         for(int i=0;i<n;i++){
             if(sub[i])HSgraph[i] = sub_core.get(i);
         }
-
-        /*// Use maxheap for delection
-        PriorityQueue<Integer> maxheapRemove;int idx;
-        for(int i=0;i<n;i++){
-            if(core[i]){
-                maxheapRemove = new PriorityQueue<>(n);
-                for(int j=0; j<HSgraph[i].inEdges.size();j++){
-                    if(sub[HSgraph[i].inEdges.get(j)]) maxheapRemove.add(-j);
-                }
-                while (!maxheapRemove.isEmpty()){
-                    idx = maxheapRemove.poll();
-                    HSgraph[i].inEdges.remove(-idx);
-                    HSgraph[i].inECost.remove(-idx);
-                }
-                maxheapRemove = new PriorityQueue<>(n);
-                for(int j=0; j<HSgraph[i].outEdges.size();j++){
-                    if(sub[HSgraph[i].outEdges.get(j)]) maxheapRemove.add(-j);
-                }
-                while (!maxheapRemove.isEmpty()){
-                    idx = maxheapRemove.poll();
-                    HSgraph[i].outEdges.remove(-idx);
-                    HSgraph[i].outECost.remove(-idx);
-                }
-            }
-        }*/
 
         HashMap<Integer,HashSet<Integer>> core_sub = new HashMap<>();
         for(int i=0; i<sub_core.size();i++){
