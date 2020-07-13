@@ -9,11 +9,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class grid_dis {
-    public static void main(String[] args) throws IOException {
-        String data_file = "./NYC/ny";
-        File file=new File("./grid");
-        if(!file.exists())file.mkdir();
-
+    private String data_file = "./NYC/ny";
+    private HashMap<Integer, HashMap<Integer, Integer>> all;
+    private void process() throws IOException {
         Gson gson = new Gson();
         InputStreamReader in = new InputStreamReader(new FileInputStream(data_file+"_graph_j.json"));
         ArrayList<ArrayList<Integer>> Edges = gson.fromJson(in,
@@ -51,10 +49,11 @@ public class grid_dis {
                 }
             }
         }
+        all = new HashMap<>(possible_in.keySet().size());
 
         ExecutorService executor = Executors.newFixedThreadPool(10);
         for (Integer origins : possible_in.keySet()) {
-                executor.execute(new single(origins, possible_in.get(origins), possible_out));//, graph, reverseGraph));
+            executor.execute(new single(origins, possible_in.get(origins), possible_out));//, graph, reverseGraph));
         }
         executor.shutdown();
         try {
@@ -62,112 +61,90 @@ public class grid_dis {
         } catch (InterruptedException e) {
             System.out.println(e.toString());
         }
-        HashMap<Integer, HashMap<Integer, Integer>> all = new HashMap<>(possible_in.keySet().size());
-        for(Integer origins: possible_in.keySet()){
-            try {
-                in = new InputStreamReader(new FileInputStream("./grid/"+origins+".json"));
-                HashMap<Integer, Integer> sub = gson.fromJson(in,
-                        new TypeToken<HashMap<Integer, Integer>>() {
-                        }.getType());
-                in.close();
-                all.put(origins, sub);
-            }catch (Exception e){
-                System.out.println(e.toString());
-            }
-        }
+
         String jsonObject = gson.toJson(all);
         OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(data_file+"_inter_region_cost_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
     }
-}
 
-class single implements Runnable {
-    private HashMap<Integer,Integer> temp = new HashMap<>(); // The character to print
-    private int id; // The number of times to repeat
-    private HashMap<Integer,HashSet<Integer>> possible_out;
-    private HashSet<Integer> origins;
-    private CHSP.Vertex[] graph;
-    /** Construct a task with a specified character and number of
-     * times to print the character
-     */
-    public single(int id, final HashSet<Integer> aim, final HashMap<Integer,HashSet<Integer>> possible_out) throws IOException {
-        Gson gson = new Gson();
-        InputStreamReader in = new InputStreamReader(new FileInputStream("./NYC/ny_graph_h_j.json"));
-        this.graph = gson.fromJson(in, new TypeToken<CHSP.Vertex[]>(){ }.getType());
-        in.close();
+    class single implements Runnable {
+        private HashMap<Integer,Integer> temp = new HashMap<>(); // The character to print
+        private int id; // The number of times to repeat
+        private HashMap<Integer,HashSet<Integer>> possible_out;
+        private HashSet<Integer> origins;
+        private CHSP.Vertex[] graph;
+        /** Construct a task with a specified character and number of
+         * times to print the character
+         */
+        single(int id, final HashSet<Integer> aim, final HashMap<Integer,HashSet<Integer>> possible_out) throws IOException {
+            Gson gson = new Gson();
+            InputStreamReader in = new InputStreamReader(new FileInputStream("./NYC/ny_graph_h_j.json"));
+            this.graph = gson.fromJson(in, new TypeToken<CHSP.Vertex[]>(){ }.getType());
+            in.close();
 
-        this.id = id;
-        this.origins = aim;
-        this.possible_out = possible_out;
-    }
-
-    private void dijkstra_lengths(int N, int S, ArrayList< Integer > distanceFromSource) {
-        Comparator<Pair<Integer,Integer>> comp = new ShortestPathLRU.pair_com();
-        for(int i = 0; i < N; i++) distanceFromSource.add( i, 1000000);
-
-        distanceFromSource.set(S, 0);
-        PriorityQueue<Pair<Integer, Integer>> dj = new PriorityQueue<>(this.graph.length, comp);
-        dj.add( new Pair<>(0, S) );
-
-        Pair<Integer, Integer> x;
-        int u, v;
-        Integer alt;
-
-        while( dj.size() != 0 )
-        {
-            x = dj.poll();
-            u = x.getValue();
-
-            if( distanceFromSource.get( u ) >= 1000000 )
-                break;
-
-            for(int i = 0; i < graph[ u ].outEdges.size(); i++) {
-                v = graph[ u ].outEdges.get( i );
-                alt = distanceFromSource.get( u ) + graph[ u ].outECost.get( i );
-                if( alt < distanceFromSource.get( v ) )
-                { 	distanceFromSource.set(v, alt);
-                    dj.add( new Pair<>(-alt, v) );
-                }
-            }
+            this.id = id;
+            this.origins = aim;
+            this.possible_out = possible_out;
         }
-    }
-    @Override
-    /** Override the run() method to tell the system
-     * what task to perform
-     */
-    public void run() {
-        Gson gson = new Gson();
-        for (Integer origin:this.origins){
-            ArrayList< Integer > distanceFromSource = new ArrayList<>(this.graph.length);
-            dijkstra_lengths(this.graph.length, origin, distanceFromSource);
-            for (Integer aims:this.possible_out.keySet()){
-                if (!aims.equals(this.id)){
-                    for (Integer aim:this.possible_out.get(aims)){
-                        int dis = distanceFromSource.get(aim);
-                        if(this.temp.getOrDefault(aims, 999999)>dis){
-                            this.temp.put(aims,dis);
-                        }
+
+        private void dijkstra_lengths(int N, int S, ArrayList< Integer > distanceFromSource) {
+            Comparator<Pair<Integer,Integer>> comp = new ShortestPathLRU.pair_com();
+            for(int i = 0; i < N; i++) distanceFromSource.add( i, 1000000);
+
+            distanceFromSource.set(S, 0);
+            PriorityQueue<Pair<Integer, Integer>> dj = new PriorityQueue<>(this.graph.length, comp);
+            dj.add( new Pair<>(0, S) );
+
+            Pair<Integer, Integer> x;
+            int u, v;
+            Integer alt;
+
+            while( dj.size() != 0 )
+            {
+                x = dj.poll();
+                u = x.getValue();
+
+                if( distanceFromSource.get( u ) >= 1000000 )
+                    break;
+
+                for(int i = 0; i < graph[ u ].outEdges.size(); i++) {
+                    v = graph[ u ].outEdges.get( i );
+                    alt = distanceFromSource.get( u ) + graph[ u ].outECost.get( i );
+                    if( alt < distanceFromSource.get( v ) )
+                    { 	distanceFromSource.set(v, alt);
+                        dj.add( new Pair<>(-alt, v) );
                     }
                 }
             }
         }
-        String jsonObject = gson.toJson(this.temp);
-        OutputStreamWriter out = null;
-        try {
-            out = new OutputStreamWriter(new FileOutputStream("./grid/"+this.id+".json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            out.write(jsonObject, 0, jsonObject.length());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        @Override
+        /** Override the run() method to tell the system
+         * what task to perform
+         */
+        public void run() {
+            for (Integer origin : this.origins) {
+                ArrayList<Integer> distanceFromSource = new ArrayList<>(this.graph.length);
+                dijkstra_lengths(this.graph.length, origin, distanceFromSource);
+                for (Integer aims : this.possible_out.keySet()) {
+                    if (!aims.equals(this.id)) {
+                        for (Integer aim : this.possible_out.get(aims)) {
+                            int dis = distanceFromSource.get(aim);
+                            if (this.temp.getOrDefault(aims, 999999) > dis) {
+                                this.temp.put(aims, dis);
+                            }
+                        }
+                    }
+                }
+            }
+            all.put(this.id, this.temp);
         }
     }
+
+
+    public static void main(String[] args) throws IOException {
+        grid_dis prune = new grid_dis();
+        prune.process();
+    }
 }
+

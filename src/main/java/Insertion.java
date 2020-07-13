@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 class Insertion {
-    final double beta = 1.0;
+    double beta = 1.0;
     Pair<Pair<Integer, Integer>, Integer> Leinsertion(Route route, Request request, ShortestPathLRU SPC, int dis_) {
         route.update(request.tr, SPC);
         int[] idx_ = {-1, -1};

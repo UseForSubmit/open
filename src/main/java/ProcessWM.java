@@ -18,7 +18,10 @@ public class ProcessWM {
 
         long starTime = System.currentTimeMillis();
         String file_parameter = "./NYC/default/";
+        File file = new File(file_parameter);
+        if (!file.exists()) file.mkdir();
         String data_source = "./NYC/ny";
+        String raw_req = "./NYC/ny_output_price_12";
         NodeFilter NF = new NodeFilter();
         NF.beta = beta;
         NF.walk_max = walk_max;
@@ -235,6 +238,12 @@ public class ProcessWM {
         SMD.SMD();
 
         System.out.print("6.finish generate SMD.\n");
+
+        ShortestPathHSG LRU = new ShortestPathHSG();
+        LRU.file = file_parameter;
+        LRU.intializeFrequent(raw_req);
+
+        System.out.print("7.finish HMPO LRU init.\n");
 
         long endTime = System.currentTimeMillis();
         long Time = endTime - starTime;

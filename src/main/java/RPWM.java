@@ -45,7 +45,7 @@ public class RPWM {
         ShortestPathLRU SPC = new ShortestPathLRU();
         SPC.init(data_file);
 
-        in = new InputStreamReader(new FileInputStream(data_set+"alter.json"));
+        in = new InputStreamReader(new FileInputStream(data_set+"alterf.json"));
         ArrayList<HashMap<Integer, Integer>> alter_node = gson.fromJson(in,
                 new TypeToken<ArrayList<HashMap<Integer, Integer>>>() {
                 }.getType());
@@ -126,7 +126,8 @@ public class RPWM {
                 if (route_idx != -1) {
                     served += 1;
                     //System.out.println("new insertion:");
-                    //routes.get(route_idx).print_tour_RM();
+                    //int last_time = routes.get(route_idx).route.get(routes.get(route_idx).size - 1)[2];
+		            //routes.get(route_idx).print_tour_RM();
                     routes.get(route_idx).insert_RMD(insert_idx[0], insert_idx[1], request, SPC, SPC.dis(meet, dep),
                             request.tr+meets.get(meet), meet, dep, request.td-deps.get(dep));
                     //routes.get(route_idx).print_tour_RM();

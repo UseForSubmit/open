@@ -1,6 +1,5 @@
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.infomatiq.jsi.rtree.RTree;
 import javafx.util.Pair;
 
 import java.io.*;
@@ -18,7 +17,7 @@ public class HSRP {
         if (args.length > 0) {
             work_num = Integer.parseInt(args[0]);
         } else {
-            work_num = 3000;
+            work_num = 20000;
         }
         final double detour_factor;
         if (args.length > 1) {
@@ -76,7 +75,7 @@ public class HSRP {
                 new TypeToken<ArrayList<Integer>>() {
                 }.getType());
         in.close();
-        in = new InputStreamReader(new FileInputStream(data_set + "sub2core.json"));
+        in = new InputStreamReader(new FileInputStream(data_set + "core2sub.json"));
         HashMap<Integer, HashSet<Integer>> core2sub = gson.fromJson(in,
                 new TypeToken<HashMap<Integer, HashSet<Integer>>>() {
                 }.getType());
@@ -123,7 +122,7 @@ public class HSRP {
 
                 //request.fulfilHS(penalty_weight, detour_factor, meets, deps, SPC);
                 request.fulfil(penalty_weight, detour_factor);
-                int time_left = request.tp;
+                int time_left = request.td-request.dist;
                 if (current_num % 50000 == 0) {
                     System.out.println(current_num + " arrived, served " + served + ", penalty is " + penalty);
                 }

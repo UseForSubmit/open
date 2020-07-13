@@ -1,8 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 final class Request{
@@ -21,7 +16,7 @@ final class Request{
         this.tp = this.td-this.dist;
     }
 
-    /*public void fulfilHS(int p0, double df, HashMap<Integer, Integer> MP,
+    public void fulfilHS(int p0, double df, HashMap<Integer, Integer> MP,
                          HashMap<Integer, Integer> DE, ShortestPathHSG SPC){
         int max_drive = (int) (this.dist * df);
         this.td = this.tr + max_drive;
@@ -39,5 +34,5 @@ final class Request{
             }
         }
     }
-*/
+
 }

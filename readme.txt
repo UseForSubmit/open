@@ -1,46 +1,53 @@
-Many big raw files cannot be uploaded. After processing, the files for default parameters are uploaded.
+We have 3 algorithms
 
------------1. You need to download the NYC taxi data first:
+-----------for Algorithm SMDB:
+Run:    mvn compile exec:java -Dexec.mainClass="HSRP" -Dexec.args="|W|  1+e_r  a_i"
+-----------for Algorithm BasicMP:
+Run:    mvn compile exec:java -Dexec.mainClass="RPWM" -Dexec.args="|W|  1+e_r  a_i"
+-----------for Algorithm GreedyDP:
+Run:    mvn compile exec:java -Dexec.mainClass="GreedyDP" -Dexec.args="|W|  1+e_r  a_i"
+
+-----------where |W| is #_of_worker,   e_r is detour_factor,   a_i is worker's capacity
+-----------for example, 10000 worker with capacity 3, allowing detour 30% for SMDB algorithm:
+Run:    mvn compile exec:java -Dexec.mainClass="HSRP" -Dexec.args="10000 1.3 3"
+
+But before running the above algorithms:
+
+
+Many big raw files cannot be uploaded. After processing, the files for default parameters are uploaded.
+To fully setup it, you need to:
+
+-----------1. download the NYC taxi data first:
 wget -P ./NYC/ https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2013-12.csv
 
------------2. Then run maven command for request generation and initial LRU of normal graph 
+-----------2. run maven command for request generation and initial LRU of normal graph 
 Run:    mvn compile exec:java -Dexec.mainClass="get_request"
 
------------3. Then setup LRU for HMPO graph
+-----------3. setup LRU for HMPO graph
 Run:    mvn compile exec:java -Dexec.mainClass="ShortestPathHSG"
 
------------4. Finally we have 3 algorithms
------for Algorithm SMDB, run:
-Run:    mvn compile exec:java -Dexec.mainClass="HSRP" -Dexec.args="#_of_worker detour_factor capacity"
------for Algorithm BasicMP, run:
-Run:    mvn compile exec:java -Dexec.mainClass="RPWM" -Dexec.args="#_of_worker detour_factor capacity"
------for Algorithm GreedyDP, run:
-Run:    mvn compile exec:java -Dexec.mainClass="GreedyDP" -Dexec.args="#_of_worker detour_factor capacity"
-
------------For example, 10000 worker with capacity 3, allowing detour 30%:
-mvn compile exec:java -Dexec.mainClass="HSRP" -Dexec.args="10000 1.3 3"
+Then you can run the 3 algorithms.
 
 
 
 Below are the steps to set up with new graphs. Remember to change the data name in each java file.
-1.Change the path of pom.xml into your own desk's
 
-2.Put the files for nodes and edges of map from OSM in the project file.
+1.Put 3 files in your own directory
+locations of nodes                   with format of "NYC/ny_node2loc.json"
+edges from OSM                     with format of "new-york-latest_edges.txt.csv"  (not uploaded yet)
+request information                 with format of "yellow_tripdata_2013-12.csv"    (not uploaded yet)
 
 ----------for basic graph generation-----------------------------
-3.Run:       mvn compile exec:java -Dexec.mainClass="Setup"
+2.Run:       mvn compile exec:java -Dexec.mainClass="Setup"
 
 ----------for NYC request generation and LRU initial-------------
-4.Run:    mvn compile exec:java -Dexec.mainClass="get_request.py"
+3.Run:       mvn compile exec:java -Dexec.mainClass="get_request"
 
 ----------for grid prune------------------------------------------
-5.Run:       mvn compile exec:java -Dexec.mainClass="grid_dis"
+4.Run:       mvn compile exec:java -Dexec.mainClass="grid_dis"
 
 ----------operations for meeting point based solutions----------
-6.Run:       mvn compile exec:java -Dexec.mainClass="ProcessWM"
+5.Run:       mvn compile exec:java -Dexec.mainClass="ProcessWM"
 
 ----------generate synthetic data---------------------------------
-7.Run:       mvn compile exec:java -Dexec.mainClass="get_syn"
-
-----------operations for HMPO LRU construction----------------
-8.Run:     mvn compile exec:java -Dexec.mainClass="ShortestPathHSG"
+6.Run:       mvn compile exec:java -Dexec.mainClass="gen_syn"

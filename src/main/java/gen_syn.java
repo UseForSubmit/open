@@ -1,30 +1,31 @@
 import com.google.gson.Gson;
-import javafx.util.Pair;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class gen_syn {
     public static void main(String[] args) throws IOException {
         String data_file = "./NYC/ny";
-        FileReader fr = new FileReader(data_file+"_output_price_12");
-        BufferedReader bf = new BufferedReader(fr);
-        String line;
+        Gson gson = new Gson();
+        InputStreamReader in = new InputStreamReader(new FileInputStream(data_file+"_output_price_12"));
+        ArrayList<int[]> requests = gson.fromJson(in,
+                new TypeToken<ArrayList<int[]>>() {
+                }.getType());
+        in.close();
 
         ArrayList<HashMap<Integer, HashMap<Integer, Integer>>> end = new ArrayList<>();
         for (int i = 0; i < 24 * 60; i++) end.add(new HashMap<>());
 
         HashSet<Integer> days = new HashSet<>();
         ArrayList<Integer> cap = new ArrayList<>();
-        while ((line = bf.readLine()) != null) {
-            String[] info = line.split(" ");
-            int day = Integer.parseInt(info[0]);
+        for(int[] info: requests){
+            int day = info[0];
             days.add(day);
-            int time = Integer.parseInt(info[2]);
-            int loc = Integer.parseInt(info[1]);
-            int locd = Integer.parseInt(info[3]);
-            cap.add(Integer.parseInt(info[4]));
+            int time = info[2];
+            int loc = info[1];
+            int locd = info[3];
+            cap.add(info[4]);
             if (!end.get(time).containsKey(loc)) {
                 HashMap<Integer, Integer> temp = new HashMap<>();
                 temp.put(locd, 1);
@@ -34,10 +35,8 @@ public class gen_syn {
             } else {
                 end.get(time).get(loc).put(locd, end.get(time).get(loc).get(locd) + 1);
             }
-
         }
-        bf.close();
-        fr.close();
+
         System.out.println("start");
         HashMap<Integer, HashMap<Integer, ArrayList<Integer>>> end_dis = new HashMap<>();
         HashMap<Integer, ArrayList<Integer>> start_dis = new HashMap<>();
@@ -82,7 +81,7 @@ public class gen_syn {
         HashMap<Integer, ArrayList<int[]>> tasks = new HashMap<>();
         for(int i=0;i<60*24*60;i++) tasks.put(i, new ArrayList<>());
         int counter = 0;
-        Gson gson = new Gson();
+
         ShortestPathLRU SPC = new ShortestPathLRU();
         SPC.init(data_file);
         while(true){

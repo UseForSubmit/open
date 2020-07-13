@@ -16,8 +16,8 @@ public class Setup {
         String data_type = "./NYC/ny";
         final double [] range_ = {40.51d, 40.91d, -74.26d, -73.7d};
         final double [] speed = {0d, 3.3528d, 4.4704, 5.588d, 6.7056d, 7.8232d, 8.9408d, 1d}; //1m/s for speed of human
-        String filename = "./new-york-latest_edges.txt.csv";
-        InputStreamReader in = new InputStreamReader(new FileInputStream("."+data_type+"_node2loc.json"));
+        String filename = "./NYC/new-york-latest_edges.txt.csv";
+        InputStreamReader in = new InputStreamReader(new FileInputStream(data_type+"_node2loc.json"));
         HashMap<String,ArrayList<Double>> nodes = gson.fromJson(in,
                 new TypeToken<HashMap<String,ArrayList<Double>>>() {
                 }.getType());
@@ -240,7 +240,7 @@ public class Setup {
         System.out.printf("finish recording, same %d, not same %d.\n", same, not_same);
 
         String jsonObject = gson.toJson(r_nodes_reverse);
-        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_nodes_j.json"));
+        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(data_type+"_nodes_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
@@ -260,33 +260,33 @@ public class Setup {
             node2region[infos.get(0)] = infos.get(1);
         }
         jsonObject = gson.toJson(region2node);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_region2node_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_region2node_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
         jsonObject = gson.toJson(node2region);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_node2region_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_node2region_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
         jsonObject = gson.toJson(region);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_regions_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_regions_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
         jsonObject = gson.toJson(lalo2id);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_rtree_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_rtree_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
 
         jsonObject = gson.toJson(Edges);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_graph_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_graph_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
         jsonObject = gson.toJson(Edges_p);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_graph_p.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_graph_p.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
@@ -335,11 +335,11 @@ public class Setup {
         process_h.processing(graph_p);
 
         jsonObject = gson.toJson(graph);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_graph_h_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_graph_h_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
         jsonObject = gson.toJson(graph_p);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_graph_p_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_graph_p_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
@@ -385,15 +385,15 @@ public class Setup {
             edges.get(u).put(v,temp1);
         }
         jsonObject = gson.toJson(edges);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_edges_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_edges_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
         jsonObject = gson.toJson(bi_graph);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_graph_o_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_graph_o_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
         jsonObject = gson.toJson(reverseGraph);
-        out = new OutputStreamWriter(new FileOutputStream("."+data_type+"_graph_r_j.json"));
+        out = new OutputStreamWriter(new FileOutputStream(data_type+"_graph_r_j.json"));
         out.write(jsonObject, 0, jsonObject.length());
         out.close();
 
